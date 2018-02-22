@@ -1,12 +1,10 @@
 package com.noushad.kidsapp.fragment;
 
 
-import android.graphics.drawable.NinePatchDrawable;
 import android.os.Bundle;
 import android.support.annotation.NonNull;
 import android.support.annotation.Nullable;
 import android.support.v4.app.Fragment;
-import android.support.v4.content.ContextCompat;
 import android.support.v7.widget.GridLayoutManager;
 import android.support.v7.widget.RecyclerView;
 import android.view.LayoutInflater;
@@ -21,8 +19,8 @@ import com.h6ah4i.android.widget.advrecyclerview.draggable.RecyclerViewDragDropM
 import com.h6ah4i.android.widget.advrecyclerview.utils.WrapperAdapterUtils;
 import com.noushad.kidsapp.R;
 import com.noushad.kidsapp.activity.ReArrangeActivity;
-import com.noushad.kidsapp.data_provider.AbstractDataProvider;
 import com.noushad.kidsapp.adapter.ReArrangeAdapter;
+import com.noushad.kidsapp.data_provider.AbstractDataProvider;
 
 
 public class ReArrangeFragment extends Fragment {
@@ -37,7 +35,6 @@ public class ReArrangeFragment extends Fragment {
 
     public ReArrangeFragment() {
         // Required empty public constructor
-        super();
     }
 
 
@@ -51,6 +48,47 @@ public class ReArrangeFragment extends Fragment {
     public void onViewCreated(@NonNull View view, @Nullable Bundle savedInstanceState) {
         super.onViewCreated(view, savedInstanceState);
 
+        initializeViews();
+
+        setupDragAndDrop();
+        setupAdapter();
+        setupList();
+        completeSetup();
+    }
+
+    private void completeSetup() {
+        mRecyclerViewDragDropManager.attachRecyclerView(mRecyclerView);
+        mRecyclerViewDragDropManager.setItemMoveMode(RecyclerViewDragDropManager.ITEM_MOVE_MODE_SWAP);
+        mAdapter.setItemMoveMode(RecyclerViewDragDropManager.ITEM_MOVE_MODE_SWAP);
+    }
+
+    private void setupList() {
+        GeneralItemAnimator animator = new DraggableItemAnimator();
+        mRecyclerView.setLayoutManager(mLayoutManager);
+        mRecyclerView.setAdapter(mWrappedAdapter);
+        mRecyclerView.setItemAnimator(animator);
+    }
+
+    private void setupAdapter() {
+        mAdapter = new ReArrangeAdapter(getContext(),getDataProvider());
+        mLayoutManager = new GridLayoutManager(getContext(), 3, GridLayoutManager.VERTICAL, false);
+        mWrappedAdapter = mRecyclerViewDragDropManager.createWrappedAdapter(mAdapter);
+    }
+
+    private void setupDragAndDrop() {
+
+        mRecyclerViewDragDropManager = new RecyclerViewDragDropManager();
+
+        mRecyclerViewDragDropManager.setInitiateOnLongPress(true);
+        mRecyclerViewDragDropManager.setInitiateOnMove(false);
+        mRecyclerViewDragDropManager.setLongPressTimeout(1000);
+        mRecyclerViewDragDropManager.setDragStartItemAnimationDuration(250);
+        mRecyclerViewDragDropManager.setDraggingItemAlpha(0.8f);
+        mRecyclerViewDragDropManager.setDraggingItemScale(1.3f);
+        mRecyclerViewDragDropManager.setDraggingItemRotation(15.0f);
+    }
+
+    private void initializeViews() {
         mCheckButton = getView().findViewById(R.id.check_button);
         mCheckButton.setOnClickListener(new View.OnClickListener() {
             @Override
@@ -64,35 +102,6 @@ public class ReArrangeFragment extends Fragment {
         });
 
         mRecyclerView = getView().findViewById(R.id.alphabet_list);
-        mLayoutManager = new GridLayoutManager(getContext(), 3, GridLayoutManager.VERTICAL, false);
-
-        mRecyclerViewDragDropManager = new RecyclerViewDragDropManager();
-        mRecyclerViewDragDropManager.setDraggingItemShadowDrawable(
-                (NinePatchDrawable) ContextCompat.getDrawable(getContext(), R.drawable.material_shadow));
-
-        mRecyclerViewDragDropManager.setInitiateOnLongPress(true);
-        mRecyclerViewDragDropManager.setInitiateOnMove(false);
-        mRecyclerViewDragDropManager.setLongPressTimeout(1000);
-
-        mRecyclerViewDragDropManager.setDragStartItemAnimationDuration(250);
-        mRecyclerViewDragDropManager.setDraggingItemAlpha(0.8f);
-        mRecyclerViewDragDropManager.setDraggingItemScale(1.3f);
-        mRecyclerViewDragDropManager.setDraggingItemRotation(15.0f);
-
-        mAdapter = new ReArrangeAdapter(getContext(),getDataProvider());
-
-        mWrappedAdapter = mRecyclerViewDragDropManager.createWrappedAdapter(mAdapter);
-
-        GeneralItemAnimator animator = new DraggableItemAnimator();
-
-        mRecyclerView.setLayoutManager(mLayoutManager);
-        mRecyclerView.setAdapter(mWrappedAdapter);  // requires *wrapped* adapter
-        mRecyclerView.setItemAnimator(animator);
-
-        mRecyclerViewDragDropManager.attachRecyclerView(mRecyclerView);
-
-        mRecyclerViewDragDropManager.setItemMoveMode(RecyclerViewDragDropManager.ITEM_MOVE_MODE_SWAP);
-        mAdapter.setItemMoveMode(RecyclerViewDragDropManager.ITEM_MOVE_MODE_SWAP);
     }
 
     @Override

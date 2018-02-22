@@ -3,12 +3,10 @@ package com.noushad.kidsapp.adapter;
 import android.content.Context;
 import android.support.v7.widget.CardView;
 import android.support.v7.widget.RecyclerView;
-import android.util.Log;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
 import android.widget.TextView;
-import android.widget.Toast;
 
 import com.h6ah4i.android.widget.advrecyclerview.draggable.DraggableItemAdapter;
 import com.h6ah4i.android.widget.advrecyclerview.draggable.DraggableItemConstants;
@@ -31,8 +29,6 @@ public class ReArrangeAdapter
         extends RecyclerView.Adapter<ReArrangeAdapter.MyViewHolder>
         implements DraggableItemAdapter<ReArrangeAdapter.MyViewHolder> {
 
-
-    private static final String TAG = "MyDraggableItemAdapter";
     private int mItemMoveMode;
 
     private interface Draggable extends DraggableItemConstants {
@@ -51,32 +47,27 @@ public class ReArrangeAdapter
         mItemMoveMode = itemMoveMode;
     }
 
-    public static class MyViewHolder extends AbstractDraggableItemViewHolder implements View.OnClickListener {
-        public CardView mContainer;
-        public View mDragHandle;
-        public TextView mTextView;
-        private Alphabet mItem;
+    public static class MyViewHolder extends AbstractDraggableItemViewHolder {
+         CardView mContainer;
+         View mDragHandle;
+         TextView mTextView;
 
         public MyViewHolder(View v) {
             super(v);
             mContainer = v.findViewById(R.id.item_container);
             mDragHandle = v.findViewById(R.id.item_drag_handle);
             mTextView = v.findViewById(R.id.item_alphabet);
-            v.setOnClickListener(this);
         }
 
-        @Override
-        public void onClick(View v) {
-            //
-            Toast.makeText(mContext, String.valueOf(mItem.getId()), Toast.LENGTH_SHORT).show();
-        }
 
-        public void bind(Alphabet item) {
-            mItem = item;
+        public void updateView(Alphabet item) {
+
             mTextView.setText(item.getText());
-
             final int dragState = getDragStateFlags();
+            switchColor(dragState);
+        }
 
+        private void switchColor(int dragState) {
             if (((dragState & Draggable.STATE_FLAG_IS_UPDATED) != 0)) {
                 int bgResId;
 
@@ -113,10 +104,8 @@ public class ReArrangeAdapter
 
     @Override
     public void onBindViewHolder(MyViewHolder holder, int position) {
-
         Alphabet item = (Alphabet) mProvider.getItem(position);
-
-        holder.bind(item);
+        holder.updateView(item);
     }
 
     @Override
@@ -126,8 +115,6 @@ public class ReArrangeAdapter
 
     @Override
     public void onMoveItem(int fromPosition, int toPosition) {
-        Log.d(TAG, "onMoveItem(fromPosition = " + fromPosition + ", toPosition = " + toPosition + ")");
-
         if (mItemMoveMode == RecyclerViewDragDropManager.ITEM_MOVE_MODE_DEFAULT) {
             mProvider.moveItem(fromPosition, toPosition);
         } else {

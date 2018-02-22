@@ -86,7 +86,8 @@ public class CalculateActivity extends BaseActivity {
     private void getQuestion() {
 
         reset();
-        mIndex++;
+        mIndex = new Random().nextInt(questions.size());
+
         if (mIndex < questions.size() + 1) { //because i am accessing key not index
             mAnswer = questions.get(mIndex);
             charArray = mAnswer.toCharArray();
