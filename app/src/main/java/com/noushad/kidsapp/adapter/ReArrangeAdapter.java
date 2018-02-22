@@ -72,8 +72,8 @@ public class ReArrangeAdapter
                 int bgResId;
 
                 if ((dragState & Draggable.STATE_FLAG_IS_ACTIVE) != 0) {
-                    bgResId = R.color.colorRed;
-                    mTextView.setTextColor(mContext.getResources().getColor(R.color.coloWhite));
+                    bgResId = R.color.colorYellow;
+                    mTextView.setTextColor(mContext.getResources().getColor(R.color.colorAccent));
                     // need to clear drawable state here to get correct appearance of the dragging item.
                     DrawableUtils.clearState(mContainer.getForeground());
 

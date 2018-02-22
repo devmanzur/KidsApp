@@ -21,4 +21,11 @@
         android:text="H"
         android:textColor="@color/cardview_light_background"
         android:textSize="36sp" />
+
+    <View
+        android:id="@+id/item_drag_handle"
+        android:layout_width="match_parent"
+        android:layout_height="44dp"
+        android:layout_gravity="bottom"
+        android:background="#20000000" />
 </android.support.v7.widget.CardView>

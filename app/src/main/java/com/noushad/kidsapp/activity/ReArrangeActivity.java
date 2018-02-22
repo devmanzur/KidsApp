@@ -2,6 +2,8 @@ package com.noushad.kidsapp.activity;
 
 import android.os.Bundle;
 import android.support.v4.app.Fragment;
+import android.view.Window;
+import android.view.WindowManager;
 
 import com.noushad.kidsapp.R;
 import com.noushad.kidsapp.data_provider.AbstractDataProvider;
@@ -16,6 +18,10 @@ public class ReArrangeActivity extends BaseActivity {
     @Override
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
+
+        requestWindowFeature(Window.FEATURE_NO_TITLE);
+        getWindow().setFlags(WindowManager.LayoutParams.FLAG_FULLSCREEN,
+                WindowManager.LayoutParams.FLAG_FULLSCREEN);
         setContentView(R.layout.activity_re_arrange);
 
 

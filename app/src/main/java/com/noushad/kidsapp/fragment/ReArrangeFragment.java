@@ -1,17 +1,19 @@
 package com.noushad.kidsapp.fragment;
 
 
+import android.animation.Animator;
+import android.animation.AnimatorInflater;
 import android.os.Bundle;
 import android.support.annotation.NonNull;
 import android.support.annotation.Nullable;
 import android.support.v4.app.Fragment;
+import android.support.v7.widget.CardView;
 import android.support.v7.widget.GridLayoutManager;
 import android.support.v7.widget.RecyclerView;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
-import android.widget.Button;
-import android.widget.Toast;
+import android.widget.TextView;
 
 import com.h6ah4i.android.widget.advrecyclerview.animator.DraggableItemAnimator;
 import com.h6ah4i.android.widget.advrecyclerview.animator.GeneralItemAnimator;
@@ -30,7 +32,8 @@ public class ReArrangeFragment extends Fragment {
     private ReArrangeAdapter mAdapter;
     private RecyclerView.Adapter mWrappedAdapter;
     private RecyclerViewDragDropManager mRecyclerViewDragDropManager;
-    private Button mCheckButton;
+    private CardView mCheckButton;
+    private TextView mResultText;
 
 
     public ReArrangeFragment() {
@@ -70,7 +73,7 @@ public class ReArrangeFragment extends Fragment {
     }
 
     private void setupAdapter() {
-        mAdapter = new ReArrangeAdapter(getContext(),getDataProvider());
+        mAdapter = new ReArrangeAdapter(getContext(), getDataProvider());
         mLayoutManager = new GridLayoutManager(getContext(), 3, GridLayoutManager.VERTICAL, false);
         mWrappedAdapter = mRecyclerViewDragDropManager.createWrappedAdapter(mAdapter);
     }
@@ -90,13 +93,15 @@ public class ReArrangeFragment extends Fragment {
 
     private void initializeViews() {
         mCheckButton = getView().findViewById(R.id.check_button);
+        mResultText = getView().findViewById(R.id.result_text);
         mCheckButton.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View v) {
-                if(mAdapter.isItemsInOrder()){
-                    Toast.makeText(getContext(),"CONGRATULATIONS",Toast.LENGTH_SHORT).show();
-                }else{
-                    Toast.makeText(getContext(),"TRY AGAIN",Toast.LENGTH_SHORT).show();
+                animate(v);
+                if (mAdapter.isItemsInOrder()) {
+                    mResultText.setText("CONGRATULATIONS");
+                } else {
+                    mResultText.setText("TRY AGAIN");
                 }
             }
         });
@@ -135,6 +140,15 @@ public class ReArrangeFragment extends Fragment {
 
     public AbstractDataProvider getDataProvider() {
         return ((ReArrangeActivity) getActivity()).getDataProvider();
+    }
+
+    private void animate(View v) {
+
+        Animator scaleFab = AnimatorInflater.loadAnimator(getContext(), R.animator.scale);
+        scaleFab.setTarget(v);
+
+        scaleFab.start();
+
     }
 
 }
